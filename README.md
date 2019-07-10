@@ -18,7 +18,7 @@ user@host:~/gs-openwrt$ ssh root@192.168.1.1
 
 ### UPGRADE FIRMWARE
 ```
-user@host:~/gs-openwrt$ scp ./bin/targets/ar71xx/generic/*-sysupgrade.bin root@192.168.1.1/tmp/
+user@host:~/gs-openwrt$ scp ./bin/targets/ar71xx/generic/*-sysupgrade.bin root@192.168.1.1:/tmp/
 root@openwrt:~# ssh root@192.168.1.1
 root@openwrt:~# sysupgrade /tmp/*-sysupgrade.bin
 ```
