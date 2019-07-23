@@ -22,3 +22,16 @@ user@host:~/gs-openwrt$ scp ./bin/targets/ar71xx/generic/*-sysupgrade.bin root@1
 root@openwrt:~# ssh root@192.168.1.1
 root@openwrt:~# sysupgrade /tmp/*-sysupgrade.bin
 ```
+
+### Building UBoot
+Install these packages if you are running on a 64bit OS:
+`sudo apt install libc6-i386 lib32stdc++6 zlib1g:i386`
+
+To build:
+
+```
+# cd /uboot
+# make clean
+# make all
+```
+
