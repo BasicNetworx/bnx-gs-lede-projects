@@ -1,14 +1,10 @@
 ### BUILD
 ```
-user@host:~/gs-openwrt$ echo 'CONFIG_TARGET_ar71xx=y
-CONFIG_TARGET_ar71xx_generic=y
-CONFIG_TARGET_ar71xx_generic_DEVICE_oolitebox=y' > .config
-user@host:~/gs-openwrt$ make defconfig
-user@host:~/gs-openwrt$ make -j<n>
+user@host:~/gs-openwrt$ ./build-me.sh
 ```
 Resulting firmware images are located at ./bin/targets/ar71xx/generic/*.  
-The *-sysupgrade.bin file is used for updating a device that already has firmware installed on it.
 
+The openwrt-ar71xx-generic-oolitebox-squashfs-sysupgrade.bin file is used for updating a device that already has firmware installed on it.
 
 ### CONNECT TO DEVICE
 Connect your host to the LAN port on the device using an ethernet cable.  Use DHCP - you should get a 192.168.1.x address.
