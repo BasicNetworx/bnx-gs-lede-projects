@@ -1,3 +1,11 @@
+### USB UART driver installation
+This driver is **required** if you want to receive any serial messages out of the supplied USB Serial device header.
+
+It is located here:
+`
+https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
+`
+
 ### BUILD
 ```
 user@host:~/gs-openwrt$ ./build-me.sh
