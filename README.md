@@ -1,4 +1,12 @@
 ### BUILD FIRMWARE
+
+These instructions assume the build host is running Ubuntu 16 or 18.  
+
+Run the following command to install required packages:
+```
+$ sudo apt-get install -y sudo time git-core subversion build-essential gcc-multilib libncurses5-dev zlib1g-dev gawk flex gettext wget unzip python
+```
+
 ```
 user@host:~/gs-openwrt$ ./bnx-dev-build.sh
 ```
