@@ -1,14 +1,6 @@
-### USB UART driver installation
-This driver is **required** if you want to receive any serial messages out of the supplied USB Serial device header.
-
-It is located here:
-`
-https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
-`
-
-### BUILD
+### BUILD FIRMWARE
 ```
-user@host:~/gs-openwrt$ ./build-me.sh
+user@host:~/gs-openwrt$ ./bnx-dev-build.sh
 ```
 Resulting firmware images are located at ./bin/targets/ar71xx/generic/*.  
 
@@ -25,17 +17,5 @@ user@host:~/gs-openwrt$ ssh root@192.168.1.1
 user@host:~/gs-openwrt$ scp ./bin/targets/ar71xx/generic/*-sysupgrade.bin root@192.168.1.1:/tmp/
 root@openwrt:~# ssh root@192.168.1.1
 root@openwrt:~# sysupgrade /tmp/*-sysupgrade.bin
-```
-
-### Building UBoot
-Install these packages if you are running on a 64bit OS:
-`sudo apt install libc6-i386 lib32stdc++6 zlib1g:i386`
-
-To build:
-
-```
-# cd /uboot
-# make clean
-# make all
 ```
 
