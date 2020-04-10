@@ -8,13 +8,13 @@ $ sudo apt-get install -y time git-core subversion build-essential gcc-multilib 
 ```
 Clone this repo:
 ```
-user@host:~/$ git clone git@github.com:BasicNetworx/openwrt-gainstrong.git
-user@host:~/$ cd openwrt-gainstrong
+$ git clone git@github.com:BasicNetworx/openwrt-gainstrong.git
+$ cd openwrt-gainstrong
 ```
 
 ### BUILD FIRMWARE
 ```
-user@host:~/openwrt-gainstrong$ ./bnx-dev-build.sh
+$ ./bnx-dev-build.sh
 ```
 Resulting firmware images are located at ./bin/targets/ar71xx/generic/*.  
 
@@ -23,13 +23,13 @@ The openwrt-ar71xx-generic-oolitebox-squashfs-sysupgrade.bin file is used for up
 ### CONNECT TO DEVICE
 Connect your host to the LAN port on the device using an ethernet cable.  Use DHCP - you should get a 192.168.1.x address.
 ```
-user@host:~/openwrt-gainstrong$ ssh root@192.168.1.1
+$ ssh root@192.168.1.1
 ```
 
 ### UPGRADE FIRMWARE
 ```
-user@host:~/openwrt-gainstrong$ scp ./bin/targets/ar71xx/generic/*-sysupgrade.bin root@192.168.1.1:/tmp/
-root@openwrt:~# ssh root@192.168.1.1
+$ scp ./bin/targets/ar71xx/generic/*-sysupgrade.bin root@192.168.1.1:/tmp/
+$ ssh root@192.168.1.1
 root@openwrt:~# sysupgrade /tmp/*-sysupgrade.bin
 ```
 
