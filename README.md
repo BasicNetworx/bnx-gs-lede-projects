@@ -1,4 +1,4 @@
-### BUILD FIRMWARE
+### PREREQ
 
 These instructions assume the build host is running Ubuntu 16 or 18.  
 
@@ -6,7 +6,12 @@ Run the following command to install required packages:
 ```
 $ sudo apt-get install -y time git-core subversion build-essential gcc-multilib libncurses5-dev zlib1g-dev gawk flex gettext wget unzip python
 ```
+Clone this repo:
+```
+user@host:~/gs-openwrt$ git clone git@github.com:BasicNetworx/openwrt-gainstrong.git
+```
 
+### BUILD FIRMWARE
 ```
 user@host:~/gs-openwrt$ ./bnx-dev-build.sh
 ```
