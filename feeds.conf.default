@@ -1,5 +1,5 @@
 src-git packages https://github.com/openwrt/packages.git^2d5ba44c7879a78dd7cdc484d7a58a0c69df3840
-src-git luci https://github.com/openwrt/luci.git^a8366b01b7c8a7314c9423821ee361cb566c628e
+src-git luci https://github.com/openwrt/luci.git^7b230b08ebf0a1368120fe38f86593f537a80b9d
 src-git bnx git@github.com:BasicNetworx/bnx-openwrt-feeds.git
 #src-git routing https://github.com/openwrt/routing.git
 #src-git telephony https://github.com/openwrt/telephony.git
