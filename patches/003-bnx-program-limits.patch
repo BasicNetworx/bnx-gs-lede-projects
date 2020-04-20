@@ -1,0 +1,16 @@
+Index: monit-5.26.0/monitrc
+===================================================================
+--- monit-5.26.0.orig/monitrc
++++ monit-5.26.0/monitrc
+@@ -63,6 +63,11 @@ set log syslog
+ #     restartTimeout:    30 seconds  # timeout for service restart
+ # }
+ 
++set limits {
++    programOutput: 2048 B,
++    programTimeout: 900 seconds
++}
++
+ ## Set global SSL options (just most common options showed, see manual for
+ ## full list).
+ #

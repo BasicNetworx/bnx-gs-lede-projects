@@ -1,3 +1,4 @@
 {
-    "002-bnx-include-dir.patch": "package/feeds/packages/monit"
+    "002-bnx-include-dir.patch": "package/feeds/packages/monit",
+    "003-bnx-program-limits.patch": "package/feeds/packages/monit"
 }
