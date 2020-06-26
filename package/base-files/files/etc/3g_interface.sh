@@ -1,5 +1,6 @@
 . /lib/functions.sh
 
+metric_offset=30
 add_iface() {
     iface=$1
     dev=$2
@@ -9,6 +10,8 @@ add_iface() {
     uci set network.$iface.service='umts'
     uci set network.$iface.device=$dev
     uci set network.$iface.apn='internet'
+    uci set network.$iface.metric=$((metric_offset))
+    metric_offset=$((metric_offset+10))
 }
 
 check_add_iface() {

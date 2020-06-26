@@ -57,6 +57,7 @@ generate_static_network() {
 }
 
 addr_offset=3
+metric_offset=10
 generate_network() {
 	local ifname macaddr protocol type ipaddr netmask
 
@@ -102,7 +103,6 @@ generate_network() {
 				set network.$1.proto='static'
 				set network.$1.ipaddr='$ipad'
 				set network.$1.netmask='$netm'
-				set network.$1.ip6assign='60'
 			EOF
 		;;
 
@@ -112,10 +112,8 @@ generate_network() {
 
 			uci -q batch <<-EOF
 				set network.$1.proto='dhcp'
-				delete network.${1}6
-				set network.${1}6='interface'
-				set network.${1}6.ifname='$ifname'
-				set network.${1}6.proto='dhcpv6'
+				set network.$1.metric=$((metric_offset))
+				metric_offset=$((metric_offset+10))
 			EOF
 		;;
 
@@ -125,10 +123,6 @@ generate_network() {
 				set network.$1.username='username'
 				set network.$1.password='password'
 				set network.$1.ipv6='1'
-				delete network.${1}6
-				set network.${1}6='interface'
-				set network.${1}6.ifname='@${1}'
-				set network.${1}6.proto='dhcpv6'
 			EOF
 		;;
 	esac
