@@ -1,6 +1,15 @@
 #!/bin/bash
+set -e
+
+## FETCH
+# ./scripts/feeds clean
 ./scripts/feeds update -a
 ./scripts/feeds install -p bnx -a
-cp bnx-dev-build.config .config
+
+## CONFIGURE
+cp bnx.config .config
 make defconfig
-make -j4
+
+## BUILD
+# make clean
+make -j$(nproc)
