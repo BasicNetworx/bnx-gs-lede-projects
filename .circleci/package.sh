@@ -1,14 +1,15 @@
 #!/bin/bash
 set -e -x
 
-ZIP_FILE=$1
-ARTIFACT_FOLDER="build-artifacts"
+ENV=$1
+COMMITISH=$2
+ARTIFACT_FOLDER=$3
 
-mkdir -p $ARTIFACT_FOLDER/firmware
+version=$(bash .circleci/get_version.sh $ENV $COMMITISH)
+
 mkdir -p $ARTIFACT_FOLDER/packages
-
-mv bin/targets/ar71xx/generic/openwrt-ar71xx-generic-oolitebox-squashfs-* $ARTIFACT_FOLDER/firmware/
-mv bin/packages/mips_24kc/* $ARTIFACT_FOLDER/packages/
-mv bin/targets/ar71xx/generic/packages/ $ARTIFACT_FOLDER/packages/core
-
-zip -r $ZIP_FILE $ARTIFACT_FOLDER
+cp bin/targets/ar71xx/generic/openwrt-ar71xx-generic-oolitebox-squashfs-factory.bin $ARTIFACT_FOLDER/${version}_factory.bin
+cp bin/targets/ar71xx/generic/openwrt-ar71xx-generic-oolitebox-squashfs-sysupgrade.bin $ARTIFACT_FOLDER/${version}_sysupgrade.bin
+cp -R bin/packages/mips_24kc/* $ARTIFACT_FOLDER/packages/
+cp -R bin/targets/ar71xx/generic/packages $ARTIFACT_FOLDER/packages/core
+(cd $ARTIFACT_FOLDER && zip -r packages.zip packages && rm -rf packages)

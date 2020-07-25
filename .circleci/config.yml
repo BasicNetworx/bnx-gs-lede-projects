@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@1.2.1
 jobs:
   build:
     parameters:
@@ -7,15 +9,26 @@ jobs:
     docker:
       - image: bnxdev/bnx-firmware-builder
     resource_class: large
+    working_directory: /mnt/ramdisk
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "f8:c8:f8:e8:39:17:36:f0:7d:7d:20:18:ac:50:af:98"
-      - run: bash .circleci/build.sh << parameters.environment >>
-      - run: bash .circleci/package.sh build-artifacts.zip
+      - run: bash .circleci/build.sh << parameters.environment >> $CIRCLE_SHA1
+      - run: bash .circleci/package.sh << parameters.environment >> $CIRCLE_SHA1 artifacts
       - store_artifacts:
-          path: build-artifacts.zip
+          path: artifacts
+      - persist_to_workspace:
+          root: artifacts
+          paths:
+            - '*'
+  deploy:
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: ls -la /tmp/workspace
 workflows:
   version: 2
   dev:
@@ -23,6 +36,12 @@ workflows:
       - build:
           name: BuildDev
           environment: dev
+          filters:
+            branches:
+              only:
+                - master
+      - deploy:
+          name: DeployDev
           filters:
             branches:
               only:
