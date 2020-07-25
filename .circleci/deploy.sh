@@ -13,4 +13,5 @@ S3_BUCKET_PACKAGE="package.bnxcloud.com"
 S3_PATH="$S3_BUCKET_PACKAGE/$ENV"
 
 unzip $ARTIFACT_FOLDER/$PACKAGES_NAME.zip
+echo $VERSION > $PACKAGES_NAME/version.txt
 aws s3 sync $PACKAGES_NAME/ s3://$S3_PATH/ --acl public-read --delete
