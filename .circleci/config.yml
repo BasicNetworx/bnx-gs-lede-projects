@@ -24,11 +24,16 @@ jobs:
           paths:
             - '*'
   deploy:
+    parameters:
+      release-option:
+        type: string
     executor: aws-cli/default
     steps:
       - attach_workspace:
-          at: /tmp/workspace
-      - run: ls -la /tmp/workspace
+          at: /tmp/artifacts
+      - aws-cli/setup
+      - run: pip install githubrelease
+      - run: bash /tmp/artifacts/deploy.sh $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME $CIRCLE_SHA1 $(cat /tmp/artifacts/version.txt) << parameters.release-option >> /tmp/artifacts $GITHUB_TOKEN
 workflows:
   version: 2
   dev:
@@ -44,6 +49,7 @@ workflows:
           name: DeployDev
           requires:
             - BuildDev
+          release-option: --norelease
           filters:
             branches:
               only:
@@ -57,11 +63,29 @@ workflows:
             branches:
               only:
                 - release/beta
+      - deploy:
+          name: DeployBeta
+          requires:
+            - BuildBeta
+          release-option: --prerelease
+          filters:
+            branches:
+              only:
+                - release/beta
   prod:
     jobs:
       - build:
           name: BuildProd
           environment: prod
+          filters:
+            branches:
+              only:
+                - release/prod
+      - deploy:
+          name: DeployProd
+          requires:
+            - BuildProd
+          release-option: ''
           filters:
             branches:
               only:

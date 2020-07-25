@@ -7,7 +7,7 @@ version=$(cat version.txt)
 if [ "$ENV" != "prod" ]; then
     version=${version}-${ENV}
     if [ "$ENV" != "beta" ]; then
-        version=${version}+${COMMITISH}
+        version=${version}+$(echo ${COMMITISH} | cut -c -7)
     fi
 fi
 
