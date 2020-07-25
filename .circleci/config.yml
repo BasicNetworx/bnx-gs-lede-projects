@@ -16,24 +16,28 @@ jobs:
           fingerprints:
             - "f8:c8:f8:e8:39:17:36:f0:7d:7d:20:18:ac:50:af:98"
       - run: bash .circleci/build.sh << parameters.environment >> $CIRCLE_SHA1
-      - run: bash .circleci/package.sh << parameters.environment >> $CIRCLE_SHA1 artifacts
+      - run: bash .circleci/package.sh << parameters.environment >> $CIRCLE_SHA1 workspace
       - store_artifacts:
-          path: artifacts
+          path: workspace/artifacts
+          destination: artifacts
       - persist_to_workspace:
-          root: artifacts
+          root: workspace
           paths:
             - '*'
-  deploy:
+  release_and_deploy:
     parameters:
+      environment:
+        type: string
       release-option:
         type: string
     executor: aws-cli/default
     steps:
       - attach_workspace:
-          at: /tmp/artifacts
+          at: /tmp/workspace
       - aws-cli/setup
       - run: pip install githubrelease
-      - run: bash /tmp/artifacts/deploy.sh $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME $CIRCLE_SHA1 $(cat /tmp/artifacts/version.txt) << parameters.release-option >> /tmp/artifacts $GITHUB_TOKEN
+      - run: bash /tmp/workspace/release.sh $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME $CIRCLE_SHA1 << parameters.release-option >> /tmp/workspace $GITHUB_TOKEN
+      - run: bash /tmp/workspace/deploy.sh << parameters.environment >> /tmp/workspace
 workflows:
   version: 2
   dev:
@@ -45,10 +49,11 @@ workflows:
             branches:
               only:
                 - master
-      - deploy:
-          name: DeployDev
+      - release_and_deploy:
+          name: ReleaseAndDeployDev
           requires:
             - BuildDev
+          environment: dev
           release-option: --norelease
           filters:
             branches:
@@ -63,10 +68,11 @@ workflows:
             branches:
               only:
                 - release/beta
-      - deploy:
-          name: DeployBeta
+      - release_and_deploy:
+          name: ReleaseAndDeployBeta
           requires:
             - BuildBeta
+          environment: beta
           release-option: --prerelease
           filters:
             branches:
@@ -81,10 +87,11 @@ workflows:
             branches:
               only:
                 - release/prod
-      - deploy:
-          name: DeployProd
+      - release_and_deploy:
+          name: ReleaseAndDeployProd
           requires:
             - BuildProd
+          environment: prod
           release-option: ''
           filters:
             branches:

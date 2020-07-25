@@ -1,46 +1,16 @@
 #!/bin/bash
 
-set -e
+set -e -x
 
-REPO="$1"
-COMMITISH="$2"
-VERSION="$3"
-RELEASE_OPTION="$4"
-ARTIFACT_FOLDER="$5"
-TOKEN="$6"
+ENV="$1"
+WORKSPACE_FOLDER="$2"
 
-S3_BUCKET="release.bnxcloud.com"
-S3_PREFIX="bnx-firmware"
-S3_PATH="$S3_BUCKET/$S3_PREFIX/$VERSION"
-S3_URL="https://s3.amazonaws.com/$S3_PATH"
+VERSION=$(cat $WORKSPACE_FOLDER/version.txt)
+PACKAGES_NAME="${VERSION}_packages"
+ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
 
-urlencode() {
-    # urlencode <string>
-    old_lc_collate=$LC_COLLATE
-    LC_COLLATE=C
+S3_BUCKET_PACKAGE="package.bnxcloud.com"
+S3_PATH="$S3_BUCKET_PACKAGE/$ENV"
 
-    local length="${#1}"
-    for (( i = 0; i < length; i++ )); do
-        local c="${1:i:1}"
-        case $c in
-            [a-zA-Z0-9.~_-]) printf "$c" ;;
-            *) printf '%%%02X' "'$c" ;;
-        esac
-    done
-
-    LC_COLLATE=$old_lc_collate
-}
-
-release_notes=""
-
-files=$(ls -1 $ARTIFACT_FOLDER)
-for f in $files
-do
-    aws s3 cp $ARTIFACT_FOLDER/$f s3://$S3_PATH/ --acl public-read
-    url="$S3_URL/$(urlencode $f)"
-    release_notes="${release_notes}[$f]($url)<br>"
-done
-
-if [ "$RELEASE_OPTION" != "--norelease" ]; then
-    githubrelease --github-token $TOKEN release $REPO create v$VERSION --target-commitish $COMMITISH  $RELEASE_OPTION --publish --name v$VERSION --body "$release_notes"
-fi
+unzip $ARTIFACT_FOLDER/$PACKAGES_NAME.zip
+aws s3 sync $PACKAGES_NAME/ s3://$S3_PATH/ --acl public-read --delete
