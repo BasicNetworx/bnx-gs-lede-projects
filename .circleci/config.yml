@@ -42,6 +42,8 @@ workflows:
                 - master
       - deploy:
           name: DeployDev
+          requires:
+            - BuildDev
           filters:
             branches:
               only:
