@@ -36,7 +36,7 @@ jobs:
           at: /tmp/workspace
       - aws-cli/setup
       - run: pip install githubrelease
-      - run: bash /tmp/workspace/release.sh $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME $CIRCLE_SHA1 << parameters.release-option >> /tmp/workspace $GITHUB_TOKEN
+      - run: bash /tmp/workspace/release.sh << parameters.environment >> $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME $CIRCLE_SHA1 << parameters.release-option >> /tmp/workspace $GITHUB_TOKEN
       - run: bash /tmp/workspace/deploy.sh << parameters.environment >> /tmp/workspace
 workflows:
   version: 2

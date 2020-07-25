@@ -2,16 +2,22 @@
 
 set -e
 
-REPO="$1"
-COMMITISH="$2"
-RELEASE_OPTION="$3"
-WORKSPACE_FOLDER="$4"
-TOKEN="$5"
+ENV="$1"
+REPO="$2"
+COMMITISH="$3"
+RELEASE_OPTION="$4"
+WORKSPACE_FOLDER="$5"
+TOKEN="$6"
 
 VERSION=$(cat $WORKSPACE_FOLDER/version.txt)
 ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
 
-S3_BUCKET="release.bnxcloud.com"
+if [ "$ENV" == "prod" ]; then
+    S3_BUCKET="release.bnxcloud.com"
+else
+    S3_BUCKET="release.bnxcloud-${ENV}.com"
+fi
+
 S3_PREFIX="bnx-firmware"
 S3_PATH="$S3_BUCKET/$S3_PREFIX/$VERSION"
 S3_URL="https://s3.amazonaws.com/$S3_PATH"

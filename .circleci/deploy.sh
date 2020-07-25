@@ -9,9 +9,12 @@ VERSION=$(cat $WORKSPACE_FOLDER/version.txt)
 PACKAGES_NAME="${VERSION}_packages"
 ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
 
-S3_BUCKET_PACKAGE="package.bnxcloud.com"
-S3_PATH="$S3_BUCKET_PACKAGE/$ENV"
+if [ "$ENV" == "prod" ]; then
+    S3_BUCKET="package.bnxcloud.com"
+else
+    S3_BUCKET="package.bnxcloud-${ENV}.com"
+fi
 
 unzip $ARTIFACT_FOLDER/$PACKAGES_NAME.zip
 echo $VERSION > $PACKAGES_NAME/version.txt
-aws s3 sync $PACKAGES_NAME/ s3://$S3_PATH/ --acl public-read --delete
+aws s3 sync $PACKAGES_NAME/ s3://$S3_BUCKET/ --acl public-read --delete
