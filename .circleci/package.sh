@@ -9,6 +9,7 @@ VERSION=$(bash .circleci/get_version.sh $ENV $COMMITISH)
 PACKAGES_NAME="${VERSION}_packages"
 
 # data needed in downstream jobs
+mkdir -p $WORKSPACE_FOLDER
 echo $VERSION > $WORKSPACE_FOLDER/version.txt
 cp .circleci/release.sh $WORKSPACE_FOLDER
 cp .circleci/deploy.sh $WORKSPACE_FOLDER
