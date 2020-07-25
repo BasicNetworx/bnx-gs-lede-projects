@@ -1,0 +1,47 @@
+version: 2.1
+jobs:
+  build:
+    parameters:
+      environment:
+        type: string
+    docker:
+      - image: bnxdev/bnx-firmware-builder
+    resource_class: large
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "f8:c8:f8:e8:39:17:36:f0:7d:7d:20:18:ac:50:af:98"
+      - run: bash .circleci/build.sh << parameters.environment >>
+      - run: bash .circleci/package.sh build-artifacts.zip
+      - store_artifacts:
+          path: build-artifacts.zip
+workflows:
+  version: 2
+  dev:
+    jobs:
+      - build:
+          name: BuildDev
+          environment: dev
+          filters:
+            branches:
+              only:
+                - master
+  beta:
+    jobs:
+      - build:
+          name: BuildBeta
+          environment: beta
+          filters:
+            branches:
+              only:
+                - release/beta
+  prod:
+    jobs:
+      - build:
+          name: BuildProd
+          environment: prod
+          filters:
+            branches:
+              only:
+                - release/prod
