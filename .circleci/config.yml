@@ -92,7 +92,7 @@ workflows:
           requires:
             - BuildProd
           environment: prod
-          release-option: ''
+          release-option: --ignore
           filters:
             branches:
               only:

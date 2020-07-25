@@ -49,6 +49,10 @@ do
     release_notes="${release_notes}[$f]($url)<br>"
 done
 
+if [ "$RELEASE_OPTION" == "--ignore" ]; then
+    RELEASE_OPTION=""
+fi
+
 if [ "$RELEASE_OPTION" != "--norelease" ]; then
     githubrelease --github-token $TOKEN release $REPO create v$VERSION --target-commitish $COMMITISH  $RELEASE_OPTION --publish --name v$VERSION --body "$release_notes"
 fi
