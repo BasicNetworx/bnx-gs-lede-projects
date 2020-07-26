@@ -14,7 +14,7 @@ version=$(bash .circleci/get_version.sh $ENV $COMMITISH)
 cp bnx.config .config
 cat .circleci/toolchain.config >> .config
 cat .circleci/$ENV.config >> .config
-echo 'CONFIG_VERSION_NUMBER='$version >> .config
+echo 'CONFIG_VERSION_NUMBER="'$version'"' >> .config
 make defconfig
 
 ## BUILD
