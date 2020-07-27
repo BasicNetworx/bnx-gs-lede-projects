@@ -22,4 +22,4 @@ echo 'CONFIG_VERSION_NUMBER="'$version'"' >> .config
 make defconfig
 
 ## BUILD
-make -j12 package/compile package/install target/compile target/install
+make -j12 target/compile package/compile target/install package/install
