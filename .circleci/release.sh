@@ -18,9 +18,10 @@ else
     S3_BUCKET="release.bnxcloud-${ENV}.com"
 fi
 
-S3_PREFIX="bnx-firmware"
-S3_PATH="$S3_BUCKET/$S3_PREFIX/$VERSION"
-S3_URL="https://s3.amazonaws.com/$S3_PATH"
+RELEASE_PREFIX="bnx-firmware"
+RELEASE_PATH="$S3_BUCKET/$RELEASE_PREFIX/$VERSION"
+RELEASE_S3_URI="s3://$RELEASE_PATH/"
+RELEASE_URL="https://s3.amazonaws.com/$RELEASE_PATH"
 
 urlencode() {
     # urlencode <string>
@@ -44,9 +45,30 @@ release_notes=""
 files=$(ls -1 $ARTIFACT_FOLDER)
 for f in $files
 do
-    aws s3 cp $ARTIFACT_FOLDER/$f s3://$S3_PATH/ --acl public-read
-    url="$S3_URL/$(urlencode $f)"
+    aws s3 cp $ARTIFACT_FOLDER/$f $RELEASE_S3_URI --acl public-read
+    url="$RELEASE_URL/$(urlencode $f)"
     release_notes="${release_notes}[$f]($url)<br>"
+
+    # Add new sysupgrade firmware to public list of releases
+    if [ "$RELEASE_OPTION" != "--norelease" ]; then
+        if [[ $f == *_sysupgrade.bin ]]; then
+            aws s3 cp s3://$S3_BUCKET/firmware.html .
+            HTML_FILE=$(mktemp)
+            echo "    <tr>" > $HTML_FILE
+            echo "        <td><a href=\"$url\">$VERSION</a></td>" >> $HTML_FILE
+            echo "        <td>$(date -u)</td>" >> $HTML_FILE
+            echo "    </tr>" >> $HTML_FILE
+            reg='<builds>'
+            while IFS= read -r line; do
+                printf '%s\n' "$line"
+                [[ $line =~ $reg ]] && cat $HTML_FILE
+            done < firmware.html > new_firmware.html
+            rm -rf $HTML_FILE
+            mv new_firmware.html firmware.html
+
+            aws s3 cp firmware.html s3://$S3_BUCKET/ --acl public-read
+        fi
+    fi
 done
 
 if [ "$RELEASE_OPTION" == "--ignore" ]; then
