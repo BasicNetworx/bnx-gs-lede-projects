@@ -15,8 +15,10 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "f8:c8:f8:e8:39:17:36:f0:7d:7d:20:18:ac:50:af:98"
-      - run: echo -e "untrusted comment: public key $BUILD_KEY_FINGERPRINT\n$BUILD_KEY_PUBLIC" > key-build.pub
-      - run: echo -e "untrusted comment: private key $BUILD_KEY_FINGERPRINT\n$BUILD_KEY_PRIVATE" > key-build
+      - run: |
+          echo -e "untrusted comment: public key $BUILD_KEY_FINGERPRINT\n$BUILD_KEY_PUBLIC" > key-build.pub
+      - run: |
+          echo -e "untrusted comment: private key $BUILD_KEY_FINGERPRINT\n$BUILD_KEY_PRIVATE" > key-build
       - run: bash .circleci/build.sh << parameters.environment >> $CIRCLE_SHA1
       - run: bash .circleci/package.sh << parameters.environment >> $CIRCLE_SHA1 workspace
       - store_artifacts:
