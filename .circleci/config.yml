@@ -52,7 +52,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - bnx/master
       - release_and_deploy:
           name: ReleaseAndDeployDev
           requires:
@@ -62,7 +62,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - bnx/master
   beta:
     jobs:
       - build:
@@ -71,7 +71,7 @@ workflows:
           filters:
             branches:
               only:
-                - release/beta
+                - bnx/release/beta
       - release_and_deploy:
           name: ReleaseAndDeployBeta
           requires:
@@ -81,7 +81,7 @@ workflows:
           filters:
             branches:
               only:
-                - release/beta
+                - bnx/release/beta
   prod:
     jobs:
       - build:
@@ -90,7 +90,7 @@ workflows:
           filters:
             branches:
               only:
-                - release/prod
+                - bnx/release/prod
       - release_and_deploy:
           name: ReleaseAndDeployProd
           requires:
@@ -100,4 +100,4 @@ workflows:
           filters:
             branches:
               only:
-                - release/prod
+                - bnx/release/prod
