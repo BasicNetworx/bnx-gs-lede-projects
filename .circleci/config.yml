@@ -101,3 +101,12 @@ workflows:
             branches:
               only:
                 - bnx/release/prod
+  rebase-19.07:
+    jobs:
+      - build:
+          name: BuildRebase-19.07
+          environment: dev
+          filters:
+            branches:
+              only:
+                - bnx/rebase-19.07

@@ -13,9 +13,9 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL=$(PROJECT_GIT)/project/firewall3.git
-PKG_SOURCE_DATE:=2018-04-05
-PKG_SOURCE_VERSION:=35b3e74a184b709b8ddfaaa094919a656a6ec059
-PKG_MIRROR_HASH:=b45da27ef219d0ec17ad3426b99e83781d079996fef553e5c47b98473f33b3cc
+PKG_SOURCE_DATE:=2019-11-22
+PKG_SOURCE_VERSION:=8174814a507489ebbe8bb85c1004e1f02919ca82
+PKG_MIRROR_HASH:=84e0cca2d47470bdb1788a8ae044cc425be8ff650a1137474ba43a15040085da
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=ISC
 
@@ -40,8 +40,8 @@ define Package/firewall/conffiles
 /etc/firewall.user
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
 CMAKE_OPTIONS += $(if $(CONFIG_IPV6),,-DDISABLE_IPV6=1)
 
 define Package/firewall/install
@@ -50,13 +50,13 @@ define Package/firewall/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/firewall.init $(1)/etc/init.d/firewall
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
-	$(INSTALL_DATA) ./files/firewall.hotplug $(1)/etc/hotplug.d/iface/20-firewall
+	$(INSTALL_CONF) ./files/firewall.hotplug $(1)/etc/hotplug.d/iface/20-firewall
 	$(INSTALL_DIR) $(1)/etc/config/
-	$(INSTALL_DATA) ./files/firewall.config $(1)/etc/config/firewall
+	$(INSTALL_CONF) ./files/firewall.config $(1)/etc/config/firewall
 	$(INSTALL_DIR) $(1)/etc/
-	$(INSTALL_DATA) ./files/firewall.user $(1)/etc/firewall.user
+	$(INSTALL_CONF) ./files/firewall.user $(1)/etc/firewall.user
 	$(INSTALL_DIR) $(1)/usr/share/fw3
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/helpers.conf $(1)/usr/share/fw3
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/helpers.conf $(1)/usr/share/fw3
 endef
 
 $(eval $(call BuildPackage,firewall))

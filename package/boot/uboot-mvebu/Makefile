@@ -15,6 +15,7 @@ PKG_HASH:=7e7477534409d5368eb1371ffde6820f0f79780a1a1f676161c48442cb303dfd
 
 include $(INCLUDE_DIR)/u-boot.mk
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/host-build.mk
 
 define U-Boot/Default
   BUILD_TARGET:=mvebu
@@ -23,13 +24,15 @@ endef
 
 define U-Boot/clearfog
   NAME:=SolidRun ClearFog A1
-  BUILD_DEVICES:=armada-388-clearfog-base armada-388-clearfog-pro
+  BUILD_DEVICES:=solidrun_clearfog-base-a1 solidrun_clearfog-pro-a1
   BUILD_SUBTARGET:=cortexa9
   UBOOT_IMAGE:=u-boot-spl.kwb
 endef
 
 UBOOT_TARGETS:= \
 	clearfog
+
+Build/Exports:=$(Host/Exports)
 
 define Build/Configure
 	# enable additional options beyond clearfog_defconfig

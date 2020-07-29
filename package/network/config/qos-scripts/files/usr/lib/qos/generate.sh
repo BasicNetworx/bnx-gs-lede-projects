@@ -22,15 +22,20 @@ add_insmod() {
 [ -e /etc/config/network ] && {
 	# only try to parse network config on openwrt
 
-	find_ifname() {(
-		reset_cb
-		include /lib/network
-		scan_interfaces
-		config_get "$1" ifname
-	)}
+	. /lib/functions/network.sh
+
+	find_ifname() {
+		local ifname
+		if network_get_device ifname "$1"; then
+			echo "$ifname"
+		else
+			echo "Device for interface $1 not found." >&2
+			exit 1
+		fi
+	}
 } || {
 	find_ifname() {
-		echo "Interface not found."
+		echo "Interface not found." >&2
 		exit 1
 	}
 }
@@ -118,21 +123,21 @@ parse_matching_rule() {
 				append "$var" "-m comment --comment '$value'"
 			;;
 			*:tos)
-                                add_insmod xt_dscp
-                                case "$value" in
-                                        !*) append "$var" "-m tos ! --tos $value";;
-                                        *) append "$var" "-m tos --tos $value"
-                                esac
-                        ;;
-			*:dscp)
-                                add_insmod xt_dscp
-				dscp_option="--dscp"
-                                [ -z "${value%%[EBCA]*}" ] && dscp_option="--dscp-class"
+				add_insmod xt_dscp
 				case "$value" in
-                                       	!*) append "$var" "-m dscp ! $dscp_option $value";;
-                                       	*) append "$var" "-m dscp $dscp_option $value"
-                                esac
-                        ;;
+					!*) append "$var" "-m tos ! --tos $value";;
+					*) append "$var" "-m tos --tos $value"
+				esac
+			;;
+			*:dscp)
+				add_insmod xt_dscp
+				dscp_option="--dscp"
+				[ -z "${value%%[EBCA]*}" ] && dscp_option="--dscp-class"
+				case "$value" in
+					!*) append "$var" "-m dscp ! $dscp_option $value";;
+					*) append "$var" "-m dscp $dscp_option $value"
+				esac
+			;;
 			*:direction)
 				value="$(echo "$value" | sed -e 's,-,:,g')"
 				if [ "$value" = "out" ]; then
@@ -191,8 +196,6 @@ config_cb() {
 	option_cb() {
 		return 0
 	}
-
-	# Section start
 	case "$1" in
 		interface)
 			config_set "$2" "classgroup" "Default"
@@ -200,42 +203,41 @@ config_cb() {
 		;;
 		classify|default|reclassify)
 			option_cb() {
-				append options "$1"
+				append "CONFIG_${CONFIG_SECTION}_options" "$1"
 			}
 		;;
 	esac
+}
 
-    # Section end
-	config_get TYPE "$CONFIG_SECTION" TYPE
+qos_parse_config() {
+	config_get TYPE "$1" TYPE
 	case "$TYPE" in
 		interface)
-			config_get_bool enabled "$CONFIG_SECTION" enabled 1
-			[ 1 -eq "$enabled" ] || return 0
-			config_get classgroup "$CONFIG_SECTION" classgroup
-			config_set "$CONFIG_SECTION" ifbdev "$C"
-			C=$(($C+1))
-			append INTERFACES "$CONFIG_SECTION"
-			config_set "$classgroup" enabled 1
-			config_get device "$CONFIG_SECTION" device
-			[ -z "$device" ] && {
-				device="$(find_ifname ${CONFIG_SECTION})"
-				config_set "$CONFIG_SECTION" device "$device"
+			config_get_bool enabled "$1" enabled 1
+			[ 1 -eq "$enabled" ] && {
+				config_get classgroup "$1" classgroup
+				config_set "$1" ifbdev "$C"
+				C=$(($C+1))
+				append INTERFACES "$1"
+				config_set "$classgroup" enabled 1
+				config_get device "$1" device
+				[ -z "$device" ] && {
+					device="$(find_ifname $1)"
+					[ -z "$device" ] && exit 1
+					config_set "$1" device "$device"
+				}
 			}
 		;;
-		classgroup) append CG "$CONFIG_SECTION";;
+		classgroup) append CG "$1";;
 		classify|default|reclassify)
 			case "$TYPE" in
 				classify) var="ctrules";;
 				*) var="rules";;
 			esac
-			config_get target "$CONFIG_SECTION" target
-			config_set "$CONFIG_SECTION" options "$options"
-			append "$var" "$CONFIG_SECTION"
-			unset options
+			append "$var" "$1"
 		;;
 	esac
 }
-
 
 enum_classes() {
 	local c="0"
@@ -432,7 +434,7 @@ start_cg() {
 	cat <<EOF
 $INSMOD
 EOF
-  
+
 for command in $iptables; do
 	cat <<EOF
 	$command -w -t mangle -N qos_${cg} 
@@ -490,7 +492,7 @@ stop_firewall() {
 				-e 's/^-A/-D/' \
 				-e '${p;g}' |
 			# Make into proper iptables calls
-			# Note:  awkward in previous call due to hold space usage
+			# Note: awkward in previous call due to hold space usage
 			sed -n -e "s/^./${command} -w -t mangle &/p"
 	done
 }
@@ -500,7 +502,10 @@ INTERFACES=""
 [ -e ./qos.conf ] && {
 	. ./qos.conf
 	config_cb
-} || config_load qos
+} || {
+	config_load qos
+	config_foreach qos_parse_config
+}
 
 C="0"
 for iface in $INTERFACES; do

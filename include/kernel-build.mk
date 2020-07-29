@@ -11,7 +11,7 @@ ifneq ($(DUMP),1)
   all: compile
 endif
 
-KERNEL_FILE_DEPENDS=$(BACKPORT_PATCH_DIR) $(GENERIC_PATCH_DIR) $(GENERIC_HACK_DIR) $(PATCH_DIR) $(GENERIC_FILES_DIR) $(FILES_DIR)
+KERNEL_FILE_DEPENDS=$(GENERIC_BACKPORT_DIR) $(GENERIC_PATCH_DIR) $(GENERIC_HACK_DIR) $(PATCH_DIR) $(GENERIC_FILES_DIR) $(FILES_DIR)
 STAMP_PREPARED=$(LINUX_DIR)/.prepared$(if $(QUILT)$(DUMP),,_$(shell $(call find_md5,$(KERNEL_FILE_DEPENDS),)))
 STAMP_CONFIGURED:=$(LINUX_DIR)/.configured
 include $(INCLUDE_DIR)/download.mk
@@ -131,10 +131,16 @@ define BuildKernel
 	$(Kernel/Configure)
 	touch $$@
 
+  $(LINUX_DIR)/.modules: export STAGING_PREFIX=$$(STAGING_DIR_HOST)
+  $(LINUX_DIR)/.modules: export PKG_CONFIG_PATH=$$(STAGING_DIR_HOST)/lib/pkgconfig
+  $(LINUX_DIR)/.modules: export PKG_CONFIG_LIBDIR=$$(STAGING_DIR_HOST)/lib/pkgconfig
   $(LINUX_DIR)/.modules: $(STAMP_CONFIGURED) $(LINUX_DIR)/.config FORCE
 	$(Kernel/CompileModules)
 	touch $$@
 
+  $(LINUX_DIR)/.image: export STAGING_PREFIX=$$(STAGING_DIR_HOST)
+  $(LINUX_DIR)/.image: export PKG_CONFIG_PATH=$$(STAGING_DIR_HOST)/lib/pkgconfig
+  $(LINUX_DIR)/.image: export PKG_CONFIG_LIBDIR=$$(STAGING_DIR_HOST)/lib/pkgconfig
   $(LINUX_DIR)/.image: $(STAMP_CONFIGURED) $(if $(CONFIG_STRIP_KERNEL_EXPORTS),$(KERNEL_BUILD_DIR)/symtab.h) FORCE
 	$(Kernel/CompileImage)
 	$(Kernel/CollectDebug)
