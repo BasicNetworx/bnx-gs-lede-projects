@@ -50,24 +50,22 @@ do
     release_notes="${release_notes}[$f]($url)<br>"
 
     # Add new sysupgrade firmware to public list of releases
-    if [ "$RELEASE_OPTION" != "--norelease" ]; then
-        if [[ $f == *_sysupgrade.bin ]]; then
-            aws s3 cp s3://$S3_BUCKET/firmware.html .
-            HTML_FILE=$(mktemp)
-            echo "    <tr>" > $HTML_FILE
-            echo "        <td><a href=\"$url\">$VERSION</a></td>" >> $HTML_FILE
-            echo "        <td>$(date -u)</td>" >> $HTML_FILE
-            echo "    </tr>" >> $HTML_FILE
-            reg='<builds>'
-            while IFS= read -r line; do
-                printf '%s\n' "$line"
-                [[ $line =~ $reg ]] && cat $HTML_FILE
-            done < firmware.html > new_firmware.html
-            rm -rf $HTML_FILE
-            mv new_firmware.html firmware.html
+    if [[ $f == *_sysupgrade.bin ]]; then
+        aws s3 cp s3://$S3_BUCKET/firmware.html .
+        HTML_FILE=$(mktemp)
+        echo "    <tr>" > $HTML_FILE
+        echo "        <td><a href=\"$url\">$VERSION</a></td>" >> $HTML_FILE
+        echo "        <td>$(date -u)</td>" >> $HTML_FILE
+        echo "    </tr>" >> $HTML_FILE
+        reg='<builds>'
+        while IFS= read -r line; do
+            printf '%s\n' "$line"
+            [[ $line =~ $reg ]] && cat $HTML_FILE
+        done < firmware.html > new_firmware.html
+        rm -rf $HTML_FILE
+        mv new_firmware.html firmware.html
 
-            aws s3 cp firmware.html s3://$S3_BUCKET/ --acl public-read
-        fi
+        aws s3 cp firmware.html s3://$S3_BUCKET/ --acl public-read
     fi
 done
 
