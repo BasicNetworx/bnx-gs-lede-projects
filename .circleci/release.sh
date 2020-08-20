@@ -9,20 +9,6 @@ RELEASE_OPTION="$4"
 WORKSPACE_FOLDER="$5"
 TOKEN="$6"
 
-VERSION=$(cat $WORKSPACE_FOLDER/version.txt)
-ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
-
-if [ "$ENV" == "prod" ]; then
-    S3_BUCKET="release.bnxcloud.com"
-else
-    S3_BUCKET="release.bnxcloud-${ENV}.com"
-fi
-
-RELEASE_PREFIX="bnx-firmware"
-RELEASE_PATH="$S3_BUCKET/$RELEASE_PREFIX/$VERSION"
-RELEASE_S3_URI="s3://$RELEASE_PATH/"
-RELEASE_URL="https://$RELEASE_PATH"
-
 urlencode() {
     # urlencode <string>
     old_lc_collate=$LC_COLLATE
@@ -39,6 +25,20 @@ urlencode() {
 
     LC_COLLATE=$old_lc_collate
 }
+
+VERSION=$(cat $WORKSPACE_FOLDER/version.txt)
+ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
+
+if [ "$ENV" == "prod" ]; then
+    S3_BUCKET="release.bnxcloud.com"
+else
+    S3_BUCKET="release.bnxcloud-${ENV}.com"
+fi
+
+RELEASE_PREFIX="bnx-firmware"
+RELEASE_PATH="$S3_BUCKET/$RELEASE_PREFIX/$(urlencode $VERSION)"
+RELEASE_S3_URI="s3://$RELEASE_PATH/"
+RELEASE_URL="https://$RELEASE_PATH"
 
 release_notes=""
 
