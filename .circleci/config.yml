@@ -8,7 +8,7 @@ jobs:
         type: string
     docker:
       - image: bnxdev/bnx-firmware-builder
-    resource_class: large
+    resource_class: xlarge
     working_directory: /mnt/ramdisk
     steps:
       - checkout
