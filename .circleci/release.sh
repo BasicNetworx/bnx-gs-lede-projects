@@ -9,6 +9,15 @@ RELEASE_OPTION="$4"
 WORKSPACE_FOLDER="$5"
 TOKEN="$6"
 
+VERSION=$(cat $WORKSPACE_FOLDER/version.txt)
+ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
+if [ "$ENV" == "prod" ]; then
+    S3_BUCKET="release.bnxcloud.com"
+else
+    S3_BUCKET="release.bnxcloud-${ENV}.com"
+fi
+RELEASE_PREFIX="bnx-firmware"
+
 urlencode() {
     # urlencode <string>
     old_lc_collate=$LC_COLLATE
@@ -26,25 +35,13 @@ urlencode() {
     LC_COLLATE=$old_lc_collate
 }
 
-VERSION=$(cat $WORKSPACE_FOLDER/version.txt)
-ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
-
-if [ "$ENV" == "prod" ]; then
-    S3_BUCKET="release.bnxcloud.com"
-else
-    S3_BUCKET="release.bnxcloud-${ENV}.com"
-fi
-
-RELEASE_PREFIX="bnx-firmware"
-RELEASE_PATH="$S3_BUCKET/$RELEASE_PREFIX/$VERSION"
-
 release_notes=""
 
 files=$(ls -1 $ARTIFACT_FOLDER)
 for f in $files
 do
-    aws s3 cp "$ARTIFACT_FOLDER/$f" "s3://$RELEASE_PATH" --acl public-read
-    url="https://$(urlencode $RELEASE_PATH/$f)"
+    aws s3 cp "$ARTIFACT_FOLDER/$f" "s3://$S3_BUCKET/$RELEASE_PREFIX/$VERSION/" --acl public-read
+    url="https://$S3_BUCKET/$RELEASE_PREFIX/$(urlencode $VERSION)/$(urlencode $f)"
     release_notes="${release_notes}[$f]($url)<br>"
 
     # Add new sysupgrade firmware to public list of releases
