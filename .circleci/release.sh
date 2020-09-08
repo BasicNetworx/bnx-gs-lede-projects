@@ -36,17 +36,15 @@ else
 fi
 
 RELEASE_PREFIX="bnx-firmware"
-RELEASE_PATH="$S3_BUCKET/$RELEASE_PREFIX/$(urlencode $VERSION)"
-RELEASE_S3_URI="s3://$RELEASE_PATH/"
-RELEASE_URL="https://$RELEASE_PATH"
+RELEASE_PATH="$S3_BUCKET/$RELEASE_PREFIX/$VERSION"
 
 release_notes=""
 
 files=$(ls -1 $ARTIFACT_FOLDER)
 for f in $files
 do
-    aws s3 cp $ARTIFACT_FOLDER/$f $RELEASE_S3_URI --acl public-read
-    url="$RELEASE_URL/$(urlencode $f)"
+    aws s3 cp "$ARTIFACT_FOLDER/$f" "s3://$RELEASE_PATH" --acl public-read
+    url="https://$(urlencode $RELEASE_PATH/$f)"
     release_notes="${release_notes}[$f]($url)<br>"
 
     # Add new sysupgrade firmware to public list of releases
