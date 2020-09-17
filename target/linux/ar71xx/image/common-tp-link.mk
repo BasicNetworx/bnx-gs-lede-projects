@@ -108,7 +108,7 @@ define Device/tplink-16mlzma
 endef
 
 define Device/tplink-32mlzma
-  $(Device/tplink)
+  $(Device/tplink-lzma)
   TPLINK_FLASHLAYOUT := 32Mlzma
   IMAGE_SIZE := 32256k
 endef
