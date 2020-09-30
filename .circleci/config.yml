@@ -52,7 +52,7 @@ workflows:
           filters:
             branches:
               only:
-                - bnx/master
+                - bnx/development
       - release_and_deploy:
           name: ReleaseAndDeployDev
           requires:
@@ -62,7 +62,7 @@ workflows:
           filters:
             branches:
               only:
-                - bnx/master
+                - bnx/development
   beta:
     jobs:
       - build:
