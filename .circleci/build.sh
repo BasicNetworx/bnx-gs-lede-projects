@@ -3,7 +3,8 @@ set -e -x
 
 ENV=$1
 COMMITISH=$2
-PREBUILT_URL="https://s3.amazonaws.com/download.bnxcloud.com/tools/prebuilt.tar.bz2"
+PREBUILT_VERSION="mips_24kc_gcc-7.5.0_musl"
+PREBUILT_URL="https://s3.amazonaws.com/download.bnxcloud.com/tools/prebuilt-${PREBUILT_VERSION}.tar.bz2"
 
 version=$(bash .circleci/get_version.sh $ENV $COMMITISH)
 
