@@ -79,6 +79,8 @@ define Package/comgt/install
 	$(INSTALL_DATA) ./files/getcarrier.gcom $(1)/etc/gcom/getcarrier.gcom
 	$(INSTALL_DATA) ./files/getcnum.gcom $(1)/etc/gcom/getcnum.gcom
 	$(INSTALL_DATA) ./files/getimsi.gcom $(1)/etc/gcom/getimsi.gcom
+	$(INSTALL_DATA) ./files/powercycle.gcom $(1)/etc/gcom/powercycle.gcom
+	$(INSTALL_DATA) ./files/simdetect.gcom $(1)/etc/gcom/simdetect.gcom
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/tty
 	$(INSTALL_CONF) ./files/3g.usb $(1)/etc/hotplug.d/tty/30-3g
 	$(INSTALL_DIR) $(1)/lib/netifd/proto
