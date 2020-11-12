@@ -1,3 +1,3 @@
-src-git packages git@github.com:BasicNetworx/bnx-feeds-packages.git^085f2ea
-src-git luci git@github.com:BasicNetworx/bnx-feeds-luci.git^9ef1c44
-src-git bnx git@github.com:BasicNetworx/bnx-feeds-proprietary.git^ac7aea4
+src-git packages git@github.com:BasicNetworx/bnx-feeds-packages.git^6476cdf
+src-git luci git@github.com:BasicNetworx/bnx-feeds-luci.git^966ae21
+src-git bnx git@github.com:BasicNetworx/bnx-feeds-proprietary.git^46fc62f
