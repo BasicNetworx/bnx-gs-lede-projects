@@ -71,7 +71,7 @@ workflows:
           filters:
             branches:
               only:
-                - bnx/release/beta
+                - bnx/master
       - release_and_deploy:
           name: ReleaseAndDeployBeta
           requires:
@@ -81,7 +81,7 @@ workflows:
           filters:
             branches:
               only:
-                - bnx/release/beta
+                - bnx/master
   prod:
     jobs:
       - build:
