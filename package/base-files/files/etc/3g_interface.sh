@@ -10,6 +10,7 @@ add_iface() {
     uci set network.$iface.proto='qmi'
     uci set network.$iface.device=$dev
     uci set network.$iface.apn='internet'
+    uci set network.$iface.pdptype='ipv4'
     uci set network.$iface.metric=$((metric_offset))
     metric_offset=$((metric_offset+10))
 }
