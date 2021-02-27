@@ -138,6 +138,8 @@ wifi_reload_legacy() {
 	_wifi_updown "disable" "$1"
 	scan_wifi
 	_wifi_updown "enable" "$1"
+	# Notify BNX shadow agent
+	/bin/echo "upload wireless" > /var/run/shadow.fifo &
 }
 
 wifi_reload() {
