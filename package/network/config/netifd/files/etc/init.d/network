@@ -30,6 +30,9 @@ reload_service() {
 
 	init_switch
 	ubus call network reload || rv=1
+	# Notify BNX shadow agent
+        /bin/echo "upload network" > /var/run/shadow.fifo &
+
 	/sbin/wifi reload_legacy
 	return $rv
 }

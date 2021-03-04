@@ -33,6 +33,8 @@ system_config() {
 reload_service() {
 	config_load system
 	config_foreach validate_system_section system system_config
+	# Notify BNX shadow agent
+	/bin/echo "upload system" > /var/run/shadow.fifo &
 }
 
 service_triggers()

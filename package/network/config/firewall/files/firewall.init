@@ -51,6 +51,8 @@ stop_service() {
 
 reload_service() {
 	fw3 reload
+	# Notify BNX shadow agent
+	/bin/echo "upload firewall" > /var/run/shadow.fifo &
 }
 
 boot() {
