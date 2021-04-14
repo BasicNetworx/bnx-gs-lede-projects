@@ -2,11 +2,11 @@
 set -e -x
 
 ENV=$1
-COMMITISH=$2
+BUILD_NUM=$2
 PREBUILT_VERSION="mips_24kc_gcc-7.5.0_musl"
 PREBUILT_URL="https://s3.amazonaws.com/download.bnxcloud.com/tools/prebuilt-${PREBUILT_VERSION}.tar.bz2"
 
-version=$(bash .circleci/get_version.sh $ENV $COMMITISH)
+version=$(bash .circleci/get_version.sh $ENV $BUILD_NUM)
 
 ## FETCH
 ./scripts/feeds update -a

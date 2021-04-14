@@ -19,8 +19,8 @@ jobs:
           echo -e "untrusted comment: public key $BUILD_KEY_FINGERPRINT\n$BUILD_KEY_PUBLIC" > key-build.pub
       - run: |
           echo -e "untrusted comment: private key $BUILD_KEY_FINGERPRINT\n$BUILD_KEY_PRIVATE" > key-build
-      - run: bash .circleci/build.sh << parameters.environment >> $CIRCLE_SHA1
-      - run: bash .circleci/package.sh << parameters.environment >> $CIRCLE_SHA1 workspace
+      - run: bash .circleci/build.sh << parameters.environment >> $CIRCLE_BUILD_NUM
+      - run: bash .circleci/package.sh << parameters.environment >> $CIRCLE_BUILD_NUM workspace
       - store_artifacts:
           path: workspace/artifacts
           destination: artifacts

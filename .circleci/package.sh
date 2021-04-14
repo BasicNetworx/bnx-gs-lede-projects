@@ -2,10 +2,10 @@
 set -e -x
 
 ENV=$1
-COMMITISH=$2
+BUILD_NUM=$2
 WORKSPACE_FOLDER=$3
 ARTIFACT_FOLDER=$WORKSPACE_FOLDER/artifacts
-VERSION=$(bash .circleci/get_version.sh $ENV $COMMITISH)
+VERSION=$(bash .circleci/get_version.sh $ENV $BUILD_NUM)
 PACKAGES_NAME="${VERSION}_packages"
 
 # data needed in downstream jobs
