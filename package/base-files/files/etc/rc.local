@@ -3,8 +3,4 @@
 #chmod +x /etc/switch.sh
 #.//etc/switch.sh &
 
-# We need to delete shadow.fifo pipe in every reboot
-# Becasue after reboot this file will be normal file insted of fifo
-rm /var/run/shadow.fifo
-
 exit 0
