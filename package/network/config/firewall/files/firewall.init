@@ -29,7 +29,7 @@ validate_firewall_rule()
 }
 
 service_triggers() {
-	procd_add_reload_trigger firewall	
+	procd_add_reload_trigger firewall
 
 	procd_open_validate
 	validate_firewall_redirect
@@ -52,7 +52,7 @@ stop_service() {
 reload_service() {
 	fw3 reload
 	# Notify BNX shadow agent
-	/bin/echo "upload firewall" > /var/run/shadow.fifo &
+	/usr/bin/bnx-sync-config firewall
 }
 
 boot() {
