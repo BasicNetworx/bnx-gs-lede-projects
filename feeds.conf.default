@@ -1,3 +1,7 @@
+# This configuration will be used ONLY if feeds.conf does not exist.
+# This configuration is meant for release builds.
+# For development, see feeds.conf.dev
+
 src-git packages git@github.com:BasicNetworx/bnx-feeds-packages.git^94682c1
 src-git luci git@github.com:BasicNetworx/bnx-feeds-luci.git^9774ca0
 src-git bnx git@github.com:BasicNetworx/bnx-feeds-proprietary.git^f7e4c69

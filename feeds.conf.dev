@@ -1,0 +1,48 @@
+# Copy this file to feeds.conf to use it for the feeds configuration.
+# This configuration is here for convenience to developers.
+
+###############################################################################
+###############################################################################
+##
+## Packages Feed (Public)
+##
+###############################################################################
+###############################################################################
+
+# By default pull from bnx/master branch.
+src-git packages git@github.com:BasicNetworx/bnx-feeds-packages.git;bnx/master
+
+# For development, use a local checkout of the feed
+#src-link packages /path/to/bnx-feeds-packages
+
+
+
+###############################################################################
+###############################################################################
+##
+## LUCI Feed (Public)
+##
+###############################################################################
+###############################################################################
+
+# By default pull from bnx/master branch.
+src-git luci git@github.com:BasicNetworx/bnx-feeds-luci.git;bnx/master
+
+# For development, use a local checkout of the feed
+#src-link luci /path/to/bnx-feeds-luci
+
+
+
+###############################################################################
+###############################################################################
+##
+## BNX Feed (Private)
+##
+###############################################################################
+###############################################################################
+
+# By default pull from master branch.
+src-git bnx git@github.com:BasicNetworx/bnx-feeds-proprietary.git;master
+
+# For development, use a local checkout of the feed
+#src-link bnx /path/to/bnx-feeds-proprietary
