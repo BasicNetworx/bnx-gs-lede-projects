@@ -213,24 +213,6 @@ fi
 
 include /lib/upgrade
 
-exclude_files_from_backup() {
-	CONF_FILE_LIST=$1
-	SYSUPGRADE_CONF_FILE="/etc/sysupgrade.conf"
-	TMP_FILE="/tmp/.newList"
-
-	# First loop through list and find exclude file list
-	while read line;
-	do
-		# first check ! in list
-		if [[ "${line:0:1}" == "!" ]] ; then
-			data=${line:1}
-			conf_file=$(echo $data | tr -d ' ')
-			grep -v "$conf_file" $CONF_FILE_LIST > $TMP_FILE
-			mv $TMP_FILE $CONF_FILE_LIST
-		fi
-	done < $SYSUPGRADE_CONF_FILE
-}
-
 do_save_conffiles() {
 	local conf_tar="$1"
 
@@ -241,10 +223,6 @@ do_save_conffiles() {
 		return 0
 	}
 	run_hooks "$CONFFILES" $sysupgrade_init_conffiles
-
-	#check exclude list from sysupgrade.conf
-	exclude_files_from_backup $CONFFILES
-
 	ask_bool 0 "Edit config file list" && vi "$CONFFILES"
 
 	if [ "$SAVE_INSTALLED_PKGS" -eq 1 ]; then
