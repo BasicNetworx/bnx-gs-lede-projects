@@ -2,6 +2,6 @@
 # This configuration is meant for release builds.
 # For development, see feeds.conf.dev
 
-src-git bnx git@github.com:BasicNetworx/bnx-feeds-proprietary.git^64ff188
+src-git bnx git@github.com:BasicNetworx/bnx-feeds-proprietary.git^73a6d99
 src-git packages git@github.com:BasicNetworx/bnx-feeds-packages.git^85a4f12
 src-git luci git@github.com:BasicNetworx/bnx-feeds-luci.git^a816ecd
